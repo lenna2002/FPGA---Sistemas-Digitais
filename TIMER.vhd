@@ -1,14 +1,14 @@
-		library IEEE;
-		use IEEE.std_logic_1164.all;
+	library IEEE;
+	use IEEE.std_logic_1164.all;
 
-		entity TIMER is
+	entity TIMER is
 		port(
 					min_dec, min_un, sec_dec, sec_un	:		out	std_logic_vector(6 downto 0);
 					clk	:		 in	std_logic);			--ainda tem que adicionar os botões
-		end TIMER;
+	end TIMER;
 		
-		architecture hardware of TIMER is
-		begin
+	architecture hardware of TIMER is
+	begin
 		process(clk)
 		
 			-- Vai ter modificar abaixo para receber o valor da placa
@@ -18,6 +18,7 @@
 				variable display1 : integer;					--display dos decimais dos minutos
 				
 		begin			
+		
 			
 			case display4 is
 			
@@ -75,76 +76,68 @@
 				 
 			end case;
 			
-			if (min_dec > 6)					--esses if são para reduzir os valores dos minutos e dos segundos para o seu valor máximo, caso tenha sido colocado algum valor superior
-			min_dec := 5;
-			end if;
+			--if (min_dec > 6) then					--esses if são para reduzir os valores dos minutos e dos segundos para o seu valor máximo, caso tenha sido colocado algum valor superior
+			--min_dec := 5;
+			--end if;
 			
-			if (sec_dec > 6)
-			sec_dec := 5;
-			end if;
+			--if (sec_dec > 6) then
+			--sec_dec := 5;
+			--end if;
 			
-			if (sec_un > 9)
-			sec_dec := 9;
-			end if;
+			--if (sec_un > 9) then
+			--sec_un := 9;
+			--end if;
 			
-			if (min_dec > 9)
-			sec_dec := 9;
-			end if;
+			--if (min_un > 9) then
+			--min_un := 9;
+			--end if;
 			
 			while (min_dec < 6) loop				--quando chegar tudo em zero, eu vou colocar um valor maior para poder desligar todos os leds
-			
-			if(clk = '1') then						--esses são os if para poder ir reduzindo a contagem
+				
+				if(clk = '1') then						--esses são os if para poder ir reduzindo a contagem
 
-				sec_un := sec_un - 1;
-				
-				if (sec_un = 0)						--aqui é para poder ir reduzindo os displays seguintes
-				
-					if (sec_dec = 0)
+					sec_un := sec_un - 1;
 					
-						if (min_un > 0)				--esse aqui é para testar se tem algum valor no display das unidades dos minutos para reduzir quando o das dezenas dos segundos chegar a zero
+					if (sec_un = 0) then						--aqui é para poder ir reduzindo os displays seguintes
+					
+						if (sec_dec = 0) then
 						
-						min_un := min_un -1;
-						sec_dec := 5;
-						sec_un := 9;
+							if (min_un > 0) then				--esse aqui é para testar se tem algum valor no display das unidades dos minutos para reduzir quando o das dezenas dos segundos chegar a zero
+							
+								min_un := min_un -1;
+								sec_dec := 5;
+								sec_un := 9;
+								
+							else if (min_un = 0 and min_dec > 0) then				--esse aqui é para ir para o display de decimais dos minutos quando o das unidades acabar
+								min_dec := min_dec -1;
+								min_un := 9;
+								sec_dec := 5;
+								sec_un := 9;
+							end if;
 						
 						end if;
-					
-						if (min_un = 0)				--esse aqui é para ir ir para o display de decimais dos minutos quando o das unidades acabar
-							if (min_dec > 0)
-							
-							min_dec := min_dec -1;
-							min_un := 9;
-							sec_dec := 5;
+						
+						if (sec_dec > 0) then
+						
+							sec_dec := sec_dec -1;
 							sec_un := 9;
 							
-							end if;
-							end if;
 						end if;
 					end if;
 					
-					if (sec_dec > 0)
-						sec_dec := sec_dec -1;
-						sec_un := 9;
-					end if
-				end if;
-				
-				if (sec_dec = 0)						--esses if são para poder parar o loop quando tudo chegar a zero, e então colocar valores que não são suportados para que os displays sejam desligados.
-					if (min_un = 0)
-						if (sec_dec = 0)
-							if (sec_un = 0)
-								sec_un = 10;
-								sec_dec = 10;
-								min_un = 10;
-								min_dec = 10;
-							end if;
-						end if;
+					if (sec_dec = 0 and min_un = 0 and sec_dec = 0 and sec_un = 0) then				--esses if são para poder parar o loop quando tudo chegar a zero, e então colocar valores que não são suportados para que os displays sejam desligados.
+						
+						sec_un := 10;
+						sec_dec := 10;
+						min_un := 10;
+						min_dec := 10;
+						
 					end if;
+				
 				end if;
-			
-			end if;
 			
 			end loop;
 			
 		end process;
 		
-		end hardware;
+	end hardware;
