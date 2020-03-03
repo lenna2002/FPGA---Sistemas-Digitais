@@ -4,12 +4,12 @@ use IEEE.std_logic_1164.all;
 entity fpga is
 	port (
 			bar_un_sec		: out std_logic_vector(6 downto 0);
-			bar_dec_sec 		: out std_logic_vector(6 downto 0);
+			bar_dec_sec 	: out std_logic_vector(6 downto 0);
 			bar_un_min 		: out std_logic_vector(6 downto 0);
-			bar_dec_min 		: out std_logic_vector(6 downto 0);
-			clk			: in 	std_logic;
-			reset			: in	std_logic);
-			set			: in	std_logic);
+			bar_dec_min 	: out std_logic_vector(6 downto 0);
+			clk				: in 	std_logic;
+			reset				: in	std_logic;
+			set				: in	std_logic);
 end fpga;
 
 architecture hardwere of fpga is
@@ -43,10 +43,10 @@ begin
 							un_min := 0;
 							dec_sec := 0;
 							un_sec := 0;
-						end if
-					end if
-				end if
-			end if
+						end if;
+					end if;
+				end if;
+			end if;
 		end if;
 		
 		case un_sec is
@@ -104,10 +104,6 @@ begin
 			when others => bar_dec_min <= "1111110";
 				 
 		end case;
-		
-		if (dec_sec = 0 and un_min = 0 and dec_min = 0 and un_sec = 0) then				--esses if são para poder parar o loop quando tudo chegar a zero, e então colocar valores que não são suportados para que os displays sejam desligados.
-			exit;
-		end if;
 	
 	end process;
 end hardwere;	
